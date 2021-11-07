@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter.colorchooser import askcolor
 from tkinter import *
+import os
 
 aken = tk.Tk()
 
@@ -22,15 +23,22 @@ aken.geometry(f'{akna_laius}x{akna_kõrgus}+{keskelx}+{keskely}')
 aken.resizable(False, False)
 aken.attributes('-topmost', 1)
 
+def clicked(color, num):
+    print(color + ': '+str(num))
+
 valge = 7
 must = [1, 1, 0, 1, 1, 1, 0] * scales
-
+valged_klahvid = ['a','s','d','f','g','h','j']
+mustad_klahvid = ['w','e','t','y','u']
+o = 0
 for i in range(valge):
-    tk.Button(aken, bg='White', command=lambda i=i: clicked('White', i)).grid(row=0, column=i*3, rowspan=2, columnspan=3, ipadx=100, ipady=190, sticky='nsew')
-
+    Button(aken, text=valged_klahvid[i], bg='White', command=lambda i=i: clicked('White', i)).grid(row=0, column=i*3, rowspan=2, columnspan=3, ipadx=100, ipady=190, sticky='nsew')
+    aken.bind(valged_klahvid[i],lambda i=i: clicked('White', i))
 for i in range(valge - 1):
     if must[i]:
-        tk.Button(aken, bg='black', command=lambda i=i: clicked('Black', i)).grid(row=0, column=(i*3)+2, rowspan=1, columnspan=2, ipadx=30, ipady=120, sticky='n')
+        Button(aken, text=mustad_klahvid[o], bg='black', fg='white', command=lambda i=i: clicked('Black', i)).grid(row=0, column=(i*3)+2, rowspan=1, columnspan=2, ipadx=30, ipady=120, sticky='n')
+        aken.bind(mustad_klahvid[o],lambda i=i: clicked('Black', i))
+        o = o + 1
 for i in range(valge*3):
     aken.columnconfigure(i, weight=1)
 
