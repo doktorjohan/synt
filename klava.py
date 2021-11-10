@@ -2,6 +2,22 @@ import tkinter as tk
 from tkinter.colorchooser import askcolor
 from tkinter import *
 import os
+import main
+
+note_dict = {
+    "a": 261.63,
+    "w": 277.18,
+    "s": 293.66,
+    "e": 311.13,
+    "d": 329.63,
+    "f": 349.23,
+    "t": 369.99,
+    "g": 392.00,
+    "y": 415.30,
+    "h": 440.0,
+    "u": 466.16,
+    "j": 493.88
+}
 
 aken = tk.Tk()
 
@@ -25,20 +41,26 @@ aken.attributes('-topmost', 1)
 
 def clicked(color, num):
     print(color + ': '+str(num))
+    main.sound_generator(note_dict[num.char])
+
 
 valge = 7
 must = [1, 1, 0, 1, 1, 1, 0] * scales
 valged_klahvid = ['a','s','d','f','g','h','j']
 mustad_klahvid = ['w','e','t','y','u']
 o = 0
+
+
 for i in range(valge):
     Button(aken, text=valged_klahvid[i], bg='White', command=lambda i=i: clicked('White', i)).grid(row=0, column=i*3, rowspan=2, columnspan=3, ipadx=100, ipady=190, sticky='nsew')
-    aken.bind(valged_klahvid[i],lambda i=i: clicked('White', i))
+    aken.bind(valged_klahvid[i], lambda i=i: clicked('White', i))
+
 for i in range(valge - 1):
     if must[i]:
         Button(aken, text=mustad_klahvid[o], bg='black', fg='white', command=lambda i=i: clicked('Black', i)).grid(row=0, column=(i*3)+2, rowspan=1, columnspan=2, ipadx=30, ipady=120, sticky='n')
-        aken.bind(mustad_klahvid[o],lambda i=i: clicked('Black', i))
+        aken.bind(mustad_klahvid[o], lambda i=i: clicked('Black', i))
         o = o + 1
+
 for i in range(valge*3):
     aken.columnconfigure(i, weight=1)
 

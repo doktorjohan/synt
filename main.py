@@ -26,16 +26,16 @@ stream = core.open(format=FORMAT,
                 rate=RATE,
                 output=True)
 
-freq = 440
 
-sound = (np.sin(2*np.pi*freq/RATE*np.arange(RATE*5, dtype=np.float32)))
+def sound_generator(freq):
+    sound = (np.sin(2*np.pi*freq/RATE*np.arange(RATE, dtype=np.float32)))
+    stream.write(sound)
 
 
-stream.write(sound)
-
+'''
 stream.stop_stream()
-
 stream.close()
 core.terminate()
+'''
 
 
