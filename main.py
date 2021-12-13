@@ -1,7 +1,5 @@
-#initial commit stuff
-import pyaudio
 import numpy as np
-from scipy import signal
+import pyaudio
 
 FORMAT = pyaudio.paFloat32
 CHANNELS = 1
@@ -22,13 +20,13 @@ core_options = {
 
 core = pyaudio.PyAudio()
 stream = core.open(format=FORMAT,
-                channels=CHANNELS,
-                rate=RATE,
-                output=True)
+                   channels=CHANNELS,
+                   rate=RATE,
+                   output=True)
 
 
-def sound_generator(freq):
-    sound = (np.sin(2*np.pi*freq/RATE*np.arange(RATE, dtype=np.float32)))
+def sound_generator(freq, octave=1):
+    sound = (np.sin(2*np.pi*freq*octave/RATE*np.arange(RATE, dtype=np.float32)))
     stream.write(sound)
 
 
@@ -37,5 +35,3 @@ stream.stop_stream()
 stream.close()
 core.terminate()
 '''
-
-

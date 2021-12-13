@@ -19,6 +19,8 @@ note_dict = {
     "j": 493.88
 }
 
+selected_octave = 1
+
 aken = tk.Tk()
 
 scales = 3
@@ -41,7 +43,18 @@ aken.attributes('-topmost', 1)
 
 def clicked(color, num):
     print(color + ': '+str(num))
-    main.sound_generator(note_dict[num.char])
+    main.sound_generator(note_dict[num.char], selected_octave)
+
+def shift_octave_down():
+    global selected_octave
+    selected_octave /= 2
+
+def shift_octave_up():
+    global selected_octave
+    selected_octave *= 2
+
+oktav_alla = tk.Button(aken, text="-", command=shift_octave_down)
+oktav_yles = tk.Button(aken, text='+', command=shift_octave_up)
 
 
 valge = 7
@@ -75,6 +88,18 @@ faili_menüü.add_command(
 )
 
 
+oktav_menu = Menu(menüü)
+oktav_menu.add_command(
+    label='oktav üles',
+    command=shift_octave_up
+)
+
+oktav_menu.add_command(
+    label='oktav alla',
+    command=shift_octave_down
+)
+
+
 def muuda_värvi():
     värvid = askcolor(title='Klahvistik')
     aken.configure(bg=värvid[1])
@@ -82,11 +107,17 @@ def muuda_värvi():
 
 faili_menüü.add_command(
     label='Vali värv',
-    command=muuda_värvi)
+    command=muuda_värvi
+)
 
 menüü.add_cascade(
     label='Fail',
     menu=faili_menüü
+)
+
+menüü.add_cascade(
+    label='Vali oktav',
+    menu=oktav_menu
 )
 
 aken.mainloop()
