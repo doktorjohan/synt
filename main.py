@@ -1,11 +1,14 @@
 import numpy as np
 import pyaudio
+'''
+RATE ja FRAMES_PER_BUFFER muutujad ebakindlad, vastavalt süsteemile võivad olla erinevad
 
+
+'''
 FORMAT = pyaudio.paFloat32
 CHANNELS = 1
-RATE = 44100  # muuda vastavalt süsteemile
+RATE = 44100
 FRAMES_PER_BUFFER = 1024
-
 
 core_options = {
     'rate': RATE,
@@ -18,20 +21,14 @@ core_options = {
     'start': True
 }
 
+
 core = pyaudio.PyAudio()
 stream = core.open(format=FORMAT,
                    channels=CHANNELS,
                    rate=RATE,
                    output=True)
 
-
+# sisaldab heli 'valemit'
 def sound_generator(freq, octave=1):
     sound = (np.sin(2*np.pi*freq*octave/RATE*np.arange(RATE, dtype=np.float32)))
     stream.write(sound)
-
-
-'''
-stream.stop_stream()
-stream.close()
-core.terminate()
-'''

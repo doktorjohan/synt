@@ -1,9 +1,8 @@
 import tkinter as tk
-from tkinter.colorchooser import askcolor
 from tkinter import *
-import os
 import main
 
+# noodid seatud vastavusse klahvidega
 note_dict = {
     "a": 261.63,
     "w": 277.18,
@@ -19,17 +18,12 @@ note_dict = {
     "j": 493.88
 }
 
-selected_octave = 1
-
+# akna loomine
 aken = tk.Tk()
 
-scales = 3
-
 aken.title('Klahvistik')
-
 akna_laius = 700
 akna_kõrgus = 400
-
 ekraani_laius = aken.winfo_screenwidth()
 ekraani_kõrgus = aken.winfo_screenheight()
 
@@ -41,32 +35,47 @@ aken.geometry(f'{akna_laius}x{akna_kõrgus}+{keskelx}+{keskely}')
 aken.resizable(False, False)
 aken.attributes('-topmost', 1)
 
-def clicked(color, num):
-    print(color + ': '+str(num))
-    main.sound_generator(note_dict[num.char], selected_octave)
 
+# oktavite valimiseks
+selected_octave = 1
 def shift_octave_down():
     global selected_octave
     selected_octave /= 2
+
 
 def shift_octave_up():
     global selected_octave
     selected_octave *= 2
 
-oktav_alla = tk.Button(aken, text="-", command=shift_octave_down)
-oktav_yles = tk.Button(aken, text='+', command=shift_octave_up)
-
 
 valge = 7
-must = [1, 1, 0, 1, 1, 1, 0] * scales
-valged_klahvid = ['a','s','d','f','g','h','j']
-mustad_klahvid = ['w','e','t','y','u']
+must = [1, 1, 0, 1, 1, 1, 0] * 3
+valged_klahvid = ['a', 's', 'd', 'f', 'g', 'h', 'j']
+mustad_klahvid = ['w', 'e', 't', 'y', 'u']
 o = 0
 
+# main heli genereeriv funktsioon
+def clicked(color, num):
+    '''
+    num on klaviatuuriga mängides KeyPress eventi char value. Kui hiirega vajutada siis ei anna KeyPress
+    eventi ja num on type int
 
+    kutsub lihtsalt main.py failis defineeritud sound_generator funktsiooni clicked funktsiooni
+    poolt leitud parameetritega
+    '''
+    if isinstance(num, int):
+        if color == "White":
+            main.sound_generator(note_dict[valged_klahvid[num]], selected_octave)
+        else:
+            main.sound_generator(note_dict[mustad_klahvid[num]], selected_octave)
+    else:
+        main.sound_generator(note_dict[num.char], selected_octave)
+
+# klahvide paigutamine aknasse
 for i in range(valge):
     Button(aken, text=valged_klahvid[i], bg='White', command=lambda i=i: clicked('White', i)).grid(row=0, column=i*3, rowspan=2, columnspan=3, ipadx=100, ipady=190, sticky='nsew')
     aken.bind(valged_klahvid[i], lambda i=i: clicked('White', i))
+
 
 for i in range(valge - 1):
     if must[i]:
@@ -74,9 +83,12 @@ for i in range(valge - 1):
         aken.bind(mustad_klahvid[o], lambda i=i: clicked('Black', i))
         o = o + 1
 
+
 for i in range(valge*3):
     aken.columnconfigure(i, weight=1)
 
+
+#drop-down menüü loomine
 menüü = Menu(aken)
 aken.config(menu=menüü)
 
@@ -87,7 +99,6 @@ faili_menüü.add_command(
     command=aken.destroy
 )
 
-
 oktav_menu = Menu(menüü)
 oktav_menu.add_command(
     label='oktav üles',
@@ -97,17 +108,6 @@ oktav_menu.add_command(
 oktav_menu.add_command(
     label='oktav alla',
     command=shift_octave_down
-)
-
-
-def muuda_värvi():
-    värvid = askcolor(title='Klahvistik')
-    aken.configure(bg=värvid[1])
-
-
-faili_menüü.add_command(
-    label='Vali värv',
-    command=muuda_värvi
 )
 
 menüü.add_cascade(
